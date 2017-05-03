@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Flappy</title>
+    <script src="Sprite.js" charset="utf-8"></script>
+    <script src="Level.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <canvas></canvas>
+    <script>
+    var eCanvas = document.getElementsByTagName("canvas")[0];
+    var ctx = eCanvas.getContext("2d");
+
+    var actor = new Sprite();
+    var enemy = new Level();
+
+    var life = 3;
+    var pontos = 0;
+
+    enemy.init();
+
+    var fps = 120;
+    var dt = - 1/fps;
+
+    eCanvas.width = 1000;
+    eCanvas.height = 500;
+
+    desenha();
+
+    function desenha(){
+      requestAnimationFrame(desenha);
+      ctx.clearRect(0,0,eCanvas.width,eCanvas.height);
+      ctx.strokeRect(0,0,eCanvas.width,eCanvas.height);
+
+      actor.desenhar(ctx);
+      actor.mover(dt);
+
+      enemy.desenha(ctx);
+      enemy.mover(dt);
+
+      for(var i = 0; i < enemy.sprites.length; i++){
+        if(enemy.sprites[i].x < 0){
+          var r = (Math.random()*1000)/2;
+          enemy.sprites[i].y = r;
+          enemy.sprites[i].x = 900;
+          enemy.desenha(ctx);
+          pontos = pontos + 5;
+        }
+      }
+
+      ctx.fillStyle = "black";
+      ctx.fillText("vidas:"+life,450,20);
+      ctx.fillText("Pontos:"+pontos,450,30);
+
+      enemy.colidiuCom(actor,
+          function(inimigo, alvo){
+            var r = Math.random()*1000;
+            inimigo.y = r;
+            inimigo.x = 900;
+            inimigo.vy = 0;
+            life = life - 1;
+            pontos = pontos - 5;
+          }
+        );
+
+        if(life < 0){
+          ctx.clearRect(0,0,eCanvas.width,eCanvas.height);
+          ctx.fillText("You lose",500,250);
+        }
+    }
+
+    addEventListener("keydown", function(e){
+      switch (e.keyCode) {
+        case 32:
+            actor.y = actor.y-60;
+            break;
+        default:
+      }
+    });
+
+    </script>
+  </body>
+</html>
