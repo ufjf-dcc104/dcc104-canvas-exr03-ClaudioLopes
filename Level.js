@@ -19,6 +19,11 @@ Level.prototype.init = function () {
 Level.prototype.mover = function (dt) {
     for (var i = 0; i < this.sprites.length; i++) {
       this.sprites[i].moverEnemy(dt);
+
+    /*  if (this.sprites[i].x < -50) {
+        this.sprites[i].x = 1100+300*Math.random();
+        this.sprites[i].y = 500*Math.random();
+      }*/
     }
 };
 

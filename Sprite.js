@@ -12,15 +12,23 @@ function Sprite(){
 }
 
 Sprite.prototype.desenhar = function(ctx){
+  ctx.save();
+  ctx.translate(this.x, this.y);
   ctx.fillStyle = this.color;
-  ctx.fillRect(this.x,this.y, this.width, this.height);
+  ctx.fillRect(-this.width/2, -this.height/2,this.width,this.height);
+  ctx.fill();
   ctx.strokeStyle = "black";
-  ctx.strokeRect(this.x,this.y, this.width, this.height);
+  ctx.stroke();
+  ctx.strokeStyle = "grey";
+  ctx.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
+  ctx.restore();
+
 };
 
 Sprite.prototype.mover = function(dt){
-  this.vy = this.vy + 10*dt;
+  this.vy = this.vy + 610*dt;
   this.y = this.y + this.vy*dt;
+  this.cooldown -= dt;
 };
 
 Sprite.prototype.moverEnemy = function(dt){

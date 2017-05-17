@@ -21,7 +21,10 @@
     enemy.init();
 
     var fps = 120;
-    var dt = - 1/fps;
+    var dt = 1/fps;
+    var atual = new Date();
+    var anterior = new Date();
+
 
     eCanvas.width = 1000;
     eCanvas.height = 500;
@@ -30,24 +33,19 @@
 
     function desenha(){
       requestAnimationFrame(desenha);
+
+      atual = new Date();
+      dt = (atual - anterior)/1000;
+
+
       ctx.clearRect(0,0,eCanvas.width,eCanvas.height);
       ctx.strokeRect(0,0,eCanvas.width,eCanvas.height);
 
-      actor.desenhar(ctx);
       actor.mover(dt);
-
-      enemy.desenha(ctx);
       enemy.mover(dt);
 
-      for(var i = 0; i < enemy.sprites.length; i++){
-        if(enemy.sprites[i].x < 0){
-          var r = (Math.random()*1000)/2;
-          enemy.sprites[i].y = r;
-          enemy.sprites[i].x = 900;
-          enemy.desenha(ctx);
-          pontos = pontos + 5;
-        }
-      }
+      enemy.desenha(ctx);
+      actor.desenhar(ctx);
 
       ctx.fillStyle = "black";
       ctx.fillText("vidas:"+life,450,20);
@@ -64,16 +62,32 @@
           }
         );
 
+        for(var i = 0; i < enemy.sprites.length; i++){
+        if(enemy.sprites[i].x < 10){
+          var r = (Math.random()*1000)/2;
+          enemy.sprites[i].y = r;
+          enemy.sprites[i].x = 1010;
+          enemy.desenha(ctx);
+          pontos = pontos + 5;
+        }
+      }
+
         if(life < 0){
           ctx.clearRect(0,0,eCanvas.width,eCanvas.height);
           ctx.fillText("You lose",500,250);
         }
+
+        anterior = atual;
+
     }
 
     addEventListener("keydown", function(e){
       switch (e.keyCode) {
         case 32:
-            actor.y = actor.y-60;
+            if(actor.cooldown<=0){
+              actor.vy = -220;
+              actor.cooldown += 0.5;
+            }
             break;
         default:
       }
